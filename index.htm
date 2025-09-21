@@ -11,13 +11,24 @@
   *{box-sizing:border-box}
   body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;color:var(--ink);background:linear-gradient(135deg,#fff 0%,var(--bg) 100%)}
   .wrap{max-width:1100px;margin:24px auto 64px;padding:0 20px}
-  .card{background:var(--paper);border:1px solid #eee;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.06);padding:28px}
-  h1{font-size:28px;margin:0 0 8px}
-  .sub{color:var(--muted);margin-bottom:16px}
+  .card{background:var(--paper);border:1px solid #eee;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.06);padding:20px}
+  h1{font-size:24px;margin:0 0 8px}
+  .sub{color:var(--muted);margin-bottom:16px; font-size: 14px;}
   .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-  .box, .box4, .box6 { position: relative; }
-  .box{grid-column:span 12;}
-  @media(min-width:900px){ .box6{grid-column:span 6} .box4{grid-column:span 4} .box8{grid-column:span 8} }
+  
+  .box, .box4, .box6 { 
+      grid-column: span 12;
+      position: relative; 
+  }
+
+  @media(min-width:900px){ 
+    .card{padding:28px}
+    h1{font-size:28px}
+    .sub{font-size: initial;}
+    .box6{grid-column:span 6} 
+    .box4{grid-column:span 4} 
+  }
+
   label{display:block;font-size:13px;font-weight:600;margin:6px 0}
   input[type="number"],select{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px}
   input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}
@@ -30,7 +41,8 @@
   .error{background:#ffebee;border:1px solid #ffcdd2;color:#c62828;}
   .out{background:#fafafa;border:1px dashed #ddd;border-radius:12px;padding:16px}
   .out h3{margin:0 0 8px;font-size:16px;color:var(--accent)}
-  .stat{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:600px){ .stat{grid-template-columns:repeat(2,1fr);} }
   .stat div{background:#fff;border:1px solid #eee;border-radius:10px;padding:10px 12px}
   .stat b{display:block;font-size:18px}
   .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
@@ -40,11 +52,6 @@
   .foot{margin-top:10px;color:#777;font-size:12px}
   .note{font-size:12px;color:#555}
   .market-specific{display:none;}
-  .hint-box{display:none;position:absolute;top:100%;left:0;width:100%;z-index:10;background:#fff9f5;border:1px solid #ffe8d9;padding:12px 16px;margin-top:4px;border-radius:10px;font-size:13px;line-height:1.6;color:#555;padding-right:30px;}
-  .hint-box a{color:var(--accent);font-weight:600;text-decoration:none;}
-  .hint-box a:hover{text-decoration:underline;}
-  .close-hint{position:absolute;top:8px;right:10px;font-size:20px;color:#aaa;cursor:pointer;font-family:sans-serif;}
-  .close-hint:hover{color:#333;}
   .disabled-feature{opacity:0.6;background:#f9f9f9; cursor: not-allowed;}
   .disabled-label{position:relative;cursor:not-allowed;}
   .disabled-label .lock{display:inline-block;margin-left:4px; font-style: normal;}
@@ -119,21 +126,7 @@
       <div class="box4">
         <label>Target</label>
         <input type="number" id="target" placeholder="e.g., 27.4">
-        <div id="target-hint" class="hint-box">
-          <em>Assessing a realistic Target Price is key. This skill is covered in the full e-book. <a href="https://risksizer.gumroad.com/l/risk-first" target="_blank">Get the Full Version</a></em>
-          <span class="close-hint" id="close-target-hint">&times;</span>
-        </div>
       </div>
-      
-      <div class="box4">
-        <label class="disabled-label" data-tooltip="Available in the Full Version">ATR 14 <i class="lock">🔒</i></label>
-        <input type="number" id="atr" placeholder="Pro Feature" disabled class="disabled-feature">
-      </div>
-      <div class="box4">
-        <label class="disabled-label" data-tooltip="Available in the Full Version">k — ATR buffer <i class="lock">🔒</i></label>
-        <input type="number" id="k" placeholder="Pro Feature" disabled class="disabled-feature">
-      </div>
-      <div class="box4">&nbsp;</div>
       
       <div class="box12">
         <div id="perp-fields" class="market-specific">
@@ -145,17 +138,9 @@
       
       <div class="box12">
         <div id="forex-fields" class="market-specific">
-          <label>FX — pip size and USD per 10k</label>
-          <div class="grid">
-            <div class="box6">
-              <input type="number" id="pipSize" placeholder="0.0001">
-              <div class="note">Example: 0.01 for JPY pairs.</div>
-            </div>
-            <div class="box6">
-              <input type="number" id="pipVal10k" placeholder="1" disabled class="disabled-feature">
-               <div class="note">USD per 10k units (Fixed at 1 in Lite).</div>
-            </div>
-          </div>
+          <label>FX — pip size</label>
+          <input type="number" id="pipSize" placeholder="0.0001">
+          <div class="note">Example: 0.01 for JPY pairs.</div>
         </div>
       </div>
     </div>
@@ -163,7 +148,6 @@
     <div class="btns">
         <button class="primary" id="calculate">Calculate</button>
         <button class="secondary" id="reset">Reset</button>
-        <button class="secondary disabled-feature" id="copyRow">Copy Journal Row <i class="lock">🔒</i></button>
     </div>
 
     <div class="section">
@@ -173,7 +157,7 @@
       </div>
 
       <div class="grid">
-        <div class="box6 out">
+        <div class="box out">
           <h3>Key outputs</h3>
           <div class="stat">
             <div><span class="muted">RPT used</span><b id="rptUsed">—</b></div>
@@ -182,7 +166,7 @@
             <div><span class="muted">Planned R:R</span><b id="rr">—</b></div>
           </div>
         </div>
-        <div class="box6 out">
+        <div class="box out">
           <h3>Position size</h3>
           <div class="stat">
             <div><span class="muted">Size — units or contracts</span><b id="size">—</b></div>
@@ -205,169 +189,146 @@
 </div>
 
 <script>
-// --- DOM BINDINGS ---
-const DOM = {
-    inputs: {
-        equity: document.getElementById('equity'),
-        market: document.getElementById('market'),
-        direction: document.getElementById('direction'),
-        entry: document.getElementById('entry'),
-        stop: document.getElementById('stop'),
-        target: document.getElementById('target'),
-        tickValue: document.getElementById('tickValue'),
-        pipSize: document.getElementById('pipSize')
-    },
-    outputs: ['rptUsed','rMoney','rpu','rr','size','posVal'],
-    messages: {
-        error: document.getElementById('error-message'),
-        warn: document.getElementById('warn'),
-        ok: document.getElementById('ok'),
-        targetHint: document.getElementById('target-hint')
-    },
-    buttons: {
-        calculate: document.getElementById('calculate'),
-        reset: document.getElementById('reset'),
-        closeHint: document.getElementById('close-target-hint')
-    },
-    marketSpecific: {
-        perp: document.getElementById('perp-fields'),
-        forex: document.getElementById('forex-fields')
-    }
-};
-
-// --- UTILITIES ---
-function fmt(n, d=2){ if(!isFinite(n)) return "—"; return Number(n).toLocaleString(undefined,{maximumFractionDigits:d, minimumFractionDigits:d}); }
-
-function getNum(el, fallback=0){
-    const num = parseFloat(String(el.value).replace(',', '.'));
-    return isFinite(num) ? num : fallback;
-}
-
-
-// --- CORE LOGIC ---
-function calculateMetrics() {
-    const i = {
-        equity: getNum(DOM.inputs.equity),
-        market: DOM.inputs.market.value,
-        direction: DOM.inputs.direction.value,
-        entry: getNum(DOM.inputs.entry),
-        stop: getNum(DOM.inputs.stop),
-        target: getNum(DOM.inputs.target),
-        tickValue: getNum(DOM.inputs.tickValue, 1),
-        pipSize: getNum(DOM.inputs.pipSize, 0.0001)
+document.addEventListener('DOMContentLoaded', () => {
+    const DOM = {
+        inputs: {
+            equity: document.getElementById('equity'),
+            market: document.getElementById('market'),
+            direction: document.getElementById('direction'),
+            entry: document.getElementById('entry'),
+            stop: document.getElementById('stop'),
+            target: document.getElementById('target'),
+            tickValue: document.getElementById('tickValue'),
+            pipSize: document.getElementById('pipSize')
+        },
+        outputs: ['rptUsed','rMoney','rpu','rr','size','posVal'],
+        messages: {
+            error: document.getElementById('error-message'),
+            warn: document.getElementById('warn'),
+            ok: document.getElementById('ok')
+        },
+        buttons: {
+            calculate: document.getElementById('calculate'),
+            reset: document.getElementById('reset')
+        },
+        marketSpecific: {
+            perp: document.getElementById('perp-fields'),
+            forex: document.getElementById('forex-fields')
+        }
     };
-    
-    const rptUsed = 1.0;
-    const results = { error: null, rr: 0 };
-    const isLong = i.direction === 'Long';
 
-    // Validation
-    if (!i.equity || !i.entry || !i.stop || !i.target) {
-        results.error = "Please fill in Equity, Entry, Stop, and Target.";
+    function fmt(n, d=2){ if(!isFinite(n)) return "—"; return Number(n).toLocaleString(undefined,{maximumFractionDigits:d, minimumFractionDigits:d}); }
+    function getNum(el, fallback=0){
+        const num = parseFloat(String(el.value).replace(',', '.'));
+        return isFinite(num) ? num : fallback;
+    }
+
+    function calculateMetrics() {
+        const i = {
+            equity: getNum(DOM.inputs.equity),
+            market: DOM.inputs.market.value,
+            direction: DOM.inputs.direction.value,
+            entry: getNum(DOM.inputs.entry),
+            stop: getNum(DOM.inputs.stop),
+            target: getNum(DOM.inputs.target),
+            tickValue: getNum(DOM.inputs.tickValue, 1),
+            pipSize: getNum(DOM.inputs.pipSize, 0.0001)
+        };
+        
+        const rptUsed = 1.0;
+        const results = { error: null, rr: 0 };
+        const isLong = i.direction === 'Long';
+
+        if (!i.equity || !i.entry || !i.stop || !i.target) {
+            results.error = "Please fill in Equity, Entry, Stop, and Target.";
+            return results;
+        }
+        if (isLong && i.stop >= i.entry) { results.error = "For a Long trade, Stop must be below Entry."; return results; }
+        if (!isLong && i.stop <= i.entry) { results.error = "For a Short trade, Stop must be above Entry."; return results; }
+        if (isLong && i.target <= i.entry) { results.error = "For a Long trade, Target must be above Entry."; return results; }
+        if (!isLong && i.target >= i.entry) { results.error = "For a Short trade, Target must be below Entry."; return results; }
+
+        const stopDist = Math.abs(i.entry - i.stop);
+        const targetDist = Math.abs(i.target - i.entry);
+        results.rr = stopDist > 0 ? targetDist / stopDist : 0;
+        
+        results.rptUsed = rptUsed;
+        results.R = i.equity * (results.rptUsed / 100.0);
+
+        if (i.market.includes('Spot')) {
+            results.riskPerUnit = stopDist;
+        } else if (i.market.includes('Perps')) {
+            results.riskPerUnit = stopDist * i.tickValue;
+        } else {
+            const pipsToStop = i.pipSize > 0 ? stopDist / i.pipSize : 0;
+            const pipValPerUnit = 1.0 / 10000.0;
+            results.riskPerUnit = pipsToStop * pipValPerUnit;
+        }
+        
+        results.size = 0;
+        if (results.riskPerUnit > 0 && results.R > 0) {
+            results.size = results.R / results.riskPerUnit;
+            if (i.market.includes('Spot')) results.size = Math.floor(results.size);
+            else if (i.market.includes('Perps')) results.size = Math.round(results.size * 100) / 100;
+            else results.size = Math.floor(results.size / 1000) * 1000;
+        }
+        
+        results.posVal = results.size * i.entry;
         return results;
     }
-    if (isLong && i.stop >= i.entry) { results.error = "For a Long trade, Stop must be below Entry."; return results; }
-    if (!isLong && i.stop <= i.entry) { results.error = "For a Short trade, Stop must be above Entry."; return results; }
-    if (isLong && i.target <= i.entry) { results.error = "For a Long trade, Target must be above Entry."; return results; }
-    if (!isLong && i.target >= i.entry) { results.error = "For a Short trade, Target must be below Entry."; return results; }
 
-    const stopDist = Math.abs(i.entry - i.stop);
-    const targetDist = Math.abs(i.target - i.entry);
-    results.rr = stopDist > 0 ? targetDist / stopDist : 0;
-    
-    results.rptUsed = rptUsed;
-    results.R = i.equity * (results.rptUsed / 100.0);
+    function updateUI(results) {
+        Object.values(DOM.messages).forEach(el => el.style.display = 'none');
 
-    if (i.market.includes('Spot')) {
-        results.riskPerUnit = stopDist;
-    } else if (i.market.includes('Perps')) {
-        results.riskPerUnit = stopDist * i.tickValue;
-    } else { // Forex
-        const pipsToStop = i.pipSize > 0 ? stopDist / i.pipSize : 0;
-        const pipValPerUnit = 1.0 / 10000.0;
-        results.riskPerUnit = pipsToStop * pipValPerUnit;
+        if (results.error) {
+            DOM.messages.error.textContent = results.error;
+            DOM.messages.error.style.display = 'block';
+            DOM.outputs.forEach(id => { document.getElementById(id).textContent = "—"; });
+            return;
+        }
+        
+        document.getElementById('rptUsed').textContent = fmt(results.rptUsed, 1) + ' %';
+        document.getElementById('rMoney').textContent  = '$ ' + fmt(results.R, 2);
+        document.getElementById('rpu').textContent     = '$ ' + fmt(results.riskPerUnit, 4);
+        document.getElementById('rr').textContent      = fmt(results.rr, 2) + ' R:R';
+        document.getElementById('size').textContent    = fmt(results.size, DOM.inputs.market.value.includes('Perps') ? 2 : 0);
+        document.getElementById('posVal').textContent  = '$ ' + fmt(results.posVal, 2);
+        
+        if (results.rr < 1.5) {
+            DOM.messages.warn.style.display = 'inline-block';
+        } else {
+            DOM.messages.ok.style.display = 'inline-block';
+        }
     }
-    
-    results.size = 0;
-    if (results.riskPerUnit > 0 && results.R > 0) {
-        results.size = results.R / results.riskPerUnit;
-        if (i.market.includes('Spot')) results.size = Math.floor(results.size);
-        else if (i.market.includes('Perps')) results.size = Math.round(results.size * 100) / 100;
-        else results.size = Math.floor(results.size / 1000) * 1000;
+
+    function resetAll() {
+        Object.values(DOM.inputs).forEach(el => el.value = "");
+        DOM.inputs.market.value = 'Spot / Stocks / Crypto';
+        DOM.inputs.direction.value = 'Long';
+        
+        DOM.outputs.forEach(id => { document.getElementById(id).textContent = '—'; });
+        Object.values(DOM.messages).forEach(el => el.style.display = 'none');
+        
+        toggleMarketFields();
     }
-    
-    results.posVal = results.size * i.entry;
-    
-    return results;
-}
 
-function updateUI(results) {
-    Object.values(DOM.messages).forEach(el => {if(el.id !== 'target-hint') el.style.display = 'none'});
-
-    if (results.error) {
-        DOM.messages.error.textContent = results.error;
-        DOM.messages.error.style.display = 'block';
-        DOM.outputs.forEach(id => { document.getElementById(id).textContent = "—"; });
-        return;
+    function toggleMarketFields() {
+        const market = DOM.inputs.market.value;
+        DOM.marketSpecific.perp.style.display = market.includes('Perps') ? 'block' : 'none';
+        DOM.marketSpecific.forex.style.display = market.includes('Forex') ? 'block' : 'none';
     }
-    
-    document.getElementById('rptUsed').textContent = fmt(results.rptUsed, 1) + ' %';
-    document.getElementById('rMoney').textContent  = '$ ' + fmt(results.R, 2);
-    document.getElementById('rpu').textContent     = '$ ' + fmt(results.riskPerUnit, 4);
-    document.getElementById('rr').textContent      = fmt(results.rr, 2) + ' R:R';
-    document.getElementById('size').textContent    = fmt(results.size, DOM.inputs.market.value.includes('Perps') ? 2 : 0);
-    document.getElementById('posVal').textContent  = '$ ' + fmt(results.posVal, 2);
-    
-    if (results.rr < 1.5) {
-        DOM.messages.warn.style.display = 'inline-block';
-    } else {
-        DOM.messages.ok.style.display = 'inline-block';
-    }
-}
 
-function resetAll() {
-    Object.values(DOM.inputs).forEach(el => el.value = "");
-    DOM.inputs.market.value = 'Spot / Stocks / Crypto';
-    DOM.inputs.direction.value = 'Long';
-    
-    DOM.outputs.forEach(id => { document.getElementById(id).textContent = '—'; });
-    Object.values(DOM.messages).forEach(el => {if(el.id !== 'target-hint') el.style.display = 'none'});
-    
-    toggleMarketFields();
-}
+    DOM.buttons.calculate.addEventListener('click', () => {
+        const results = calculateMetrics();
+        updateUI(results);
+    });
 
-function toggleMarketFields() {
-    const market = DOM.inputs.market.value;
-    DOM.marketSpecific.perp.style.display = market.includes('Perps') ? 'block' : 'none';
-    DOM.marketSpecific.forex.style.display = market.includes('Forex') ? 'block' : 'none';
-}
+    DOM.buttons.reset.addEventListener('click', resetAll);
+    DOM.inputs.market.addEventListener('change', toggleMarketFields);
 
-
-// --- EVENT LISTENERS ---
-DOM.buttons.calculate.addEventListener('click', () => {
-    const results = calculateMetrics();
-    updateUI(results);
-});
-
-DOM.buttons.reset.addEventListener('click', resetAll);
-DOM.inputs.market.addEventListener('change', toggleMarketFields);
-DOM.inputs.target.addEventListener('focus', () => {
-    if (sessionStorage.getItem('targetHintClosed') !== 'true') {
-        DOM.messages.targetHint.style.display = 'block';
-    }
-});
-DOM.buttons.closeHint.addEventListener('click', () => {
-    DOM.messages.targetHint.style.display = 'none';
-    sessionStorage.setItem('targetHintClosed', 'true');
-});
-
-
-// --- INITIAL STATE ---
-document.addEventListener('DOMContentLoaded', () => {
     toggleMarketFields();
     resetAll();
 });
 </script>
 </body>
-
 </html>
